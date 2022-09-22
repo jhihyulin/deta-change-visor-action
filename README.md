@@ -1,7 +1,7 @@
 # deta-change-visor-action
 Simple GitHub Action to change visor set
 
-```shell
+```yaml
 - name: Change visor set on Deta
   uses: jhihyulin/deta-change-visor-action@v1.0.0
   with:
