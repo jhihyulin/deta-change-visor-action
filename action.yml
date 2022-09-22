@@ -1,0 +1,46 @@
+name: "Change visor set on Deta"
+description: "Simple GitHub Action to change visor set"
+
+inputs:
+  deta-access-token:
+    description: "Deta access token"
+    required: true
+  deta-name:
+    description: "Deta micro name"
+    required: true
+  deta-project:
+    description: "Deta project name"
+    default: "default"
+  deta-project-dir:
+    description: "Directory of the project"
+    default: "."
+  visor-mode:
+    description: "target visor mode"
+    default: "enable"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Deta CLI
+      shell: bash
+      run: |
+        curl -fsSL https://get.deta.dev/cli.sh | sh
+
+    - name: Clone Deta Metadata
+      shell: bash
+      run: |
+        export DETA_ACCESS_TOKEN=${{ inputs.deta-access-token }}
+        cd ${{ inputs.deta-project-dir }}
+        ~/.deta/bin/deta clone --name ${{ inputs.deta-name }} --project ${{ inputs.deta-project }} tmp/
+        cp -r tmp/.deta .
+
+    - name: Deploy to Deta
+      shell: bash
+      run: |
+        export DETA_ACCESS_TOKEN=${{ inputs.deta-access-token }}
+        cd ${{ inputs.deta-project-dir }}
+        ~/.deta/bin/deta visor ${{ inputs.visor-mode }}
+
+branding:
+  icon: check-circle
+  color: purple
